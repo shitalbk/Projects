@@ -1,4 +1,4 @@
-# Projects
+
 1. The Unconventional Calculator
 
     This is a simple calculator made using JavaScript.
