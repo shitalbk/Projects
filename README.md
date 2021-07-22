@@ -12,3 +12,7 @@
 
    Rock, Paper and Scissor game is a game played with computer in which each player simultaneously forms one of three shapes with an outstretched hand. 
    These shapes are "rock", "paper", and "scissors".
+   
+4. Movie Adding App
+
+   The movie adding app is under construction and will be updated soon...
