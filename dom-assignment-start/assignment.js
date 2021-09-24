@@ -1,8 +1,8 @@
 //Task One
 //First Style
-// const listOne = document.getElementById('task-1');
-// listOne.style.backgroundColor = 'black';
-// listOne.style.color = 'white';
+const listOne = document.getElementById('task-1');
+listOne.style.backgroundColor = 'black';
+listOne.style.color = 'white';
 
 //Second Style 
 const listTwo = document.querySelector('#task-1');
@@ -15,9 +15,10 @@ const docTitle = document.querySelector('#title');
 docTitle.textContent = "Assignment-Solved!!";
 
 //Second Two
-// const docTitleOne = document.querySelector('#title');
-// docTitleOne
+const docHead = document.head;
+const docTitleOne = document.head.querySelector('#title');
+docTitleOne.textContent = "Assignment-Solved!!";
 
 //Task Three
 const headingOne = document.getElementsByTagName('h1');
-headingOne.textContent = "Assignment - Solved!!";
+headingOne[0].textContent = "Assignment - Solved!!";
