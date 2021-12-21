@@ -21,8 +21,11 @@ class ElementAttribute {
 }
 
 class Component {
-  constructor(renderHookId) {
+  constructor(renderHookId, shouldRender = true) {
     this.hookId = renderHookId;
+    if(shouldRender){
+      this.render();
+    } 
   }
 
   createRootElement(tag, cssClasses, attributes) {
@@ -59,7 +62,12 @@ class ShoppingCart extends Component {
   }
 
   constructor(renderHookId){
-    super(renderHookId);
+    super(renderHookId,false);
+    this.orderProducts = ()=>{
+      console.log('Ordering...');
+      console.log(this.items);
+    };
+    this.render();
   }
 
   addProduct(product) {
@@ -67,20 +75,25 @@ class ShoppingCart extends Component {
     updatedItems.push(product);
     this.cartItems = updatedItems;
   }
+  
   render() {
     const cartEl = this.createRootElement('section','cart');
     cartEl.innerHTML = `
     <h2>Total: \$${0}</h2>
     <button>Order Now!!</button>
     `;
+    const orderButton = cartEl.querySelector('button');
+   // orderButton.addEventListener('click',()=> this.orderProducts());
+    orderButton.addEventListener('click',()=> this.orderProducts());
     this.totalOutput = cartEl.querySelector("h2");
   }
 }
 
 class ProductItem extends Component {
   constructor(product, renderHookId) {
-    super(renderHookId);
+    super(renderHookId, false);
     this.product = product;
+    this.render();
   }
   addToCart() {
     App.addProductToCart(this.product);
@@ -100,13 +113,19 @@ class ProductItem extends Component {
     `;
     const addCartButton = prodEl.querySelector("button");
     addCartButton.addEventListener("click", this.addToCart.bind(this));
-    
   }
 }
 
 class ProductList extends Component{
-  products = [
-    new Product(
+  products = [];
+
+  constructor(renderHookId) {
+    super(renderHookId);
+    this.fetchProducts();
+  }
+  fetchProducts(){
+    this.products = [
+      new Product(
       "A Pillow",
       "https://i5.walmartimages.com/asr/4ac85746-c5ed-4b39-96f6-db9e4c85a62e_1.2f506af536237b234b7d0008bca6e43c.jpeg",
       18.89,
@@ -124,27 +143,33 @@ class ProductList extends Component{
       1.89,
       "A Coffee Cup"
     )
-  ];
-
-  constructor(renderHookId) {
-    super(renderHookId);
+    ];
+    this.renderProducts();
+  }
+   
+  renderProducts(){
+    for (const prod of this.products) {
+      new ProductItem(prod, 'prod-list');
+    }
   }
 
   render() {
-    this.createRootElement('ul','product-list', [new ElementAttribute('id','prod-list')]);
-    for (const prod of this.products) {
-      const productItem = new ProductItem(prod, 'prod-list');
-      productItem.render();
+    this.createRootElement('ul','product-list', [
+      new ElementAttribute('id','prod-list')
+    ]);
+    if(this.products && this.products.length > 0){
+      this.renderProducts();
     }
   }
 }
 
 class Shop {
+  constructor(){
+    this.render();
+  }
   render() {
     this.cart = new ShoppingCart('app');
-    this.cart.render();
-    const productList = new ProductList('app');
-    productList.render();
+    new ProductList('app');
   }
 }
 
@@ -153,7 +178,6 @@ class App {
 
   static init() {
     const shop = new Shop();
-    shop.render();
     this.cart = shop.cart;
   }
   static addProductToCart(product) {
