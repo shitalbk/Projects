@@ -33,9 +33,10 @@ class Component{
   }
 }
 class Tooltip extends Component{
-  constructor(closeNotifierFunction){
+  constructor(closeNotifierFunction, text){
     super();
     this.closeNotifier = closeNotifierFunction;
+    this.text = text;
     this.create();
   }
   closeToolTip = () =>{
@@ -45,7 +46,7 @@ class Tooltip extends Component{
   create(){
     const tooltipElement = document.createElement('div');
     tooltipElement.className = 'card';
-    tooltipElement.textContent = 'DUMMY';
+    tooltipElement.textContent = this.text;
     tooltipElement.addEventListener('click', this.closeToolTip);
     this.element = tooltipElement;
   }
@@ -62,16 +63,18 @@ class ProjectItem{
     if(this.hasActiveToolTip){
       return;
     }
+    const projectElement = document.getElementById(this.id);
+    const toolTipText = projectElement.dataset.extraInfo;
     const tooltip = new Tooltip(()=> {
       this.hasActiveToolTip = false;
-    });
+    },toolTipText);
     tooltip.attach();
     this.hasActiveToolTip = true;
   }
   connectMoreInfoButton(){
     const projectItemElement = document.getElementById(this.id);
     const moreInfoBtn = projectItemElement.querySelector('button:first-of-type');
-    moreInfoBtn.addEventListener('click', this.showMoreInfoHandler);
+    moreInfoBtn.addEventListener('click', this.showMoreInfoHandler.bind(this));
   }
   connectSwitchButton(type){
     const projectItemElement = document.getElementById(this.id);
